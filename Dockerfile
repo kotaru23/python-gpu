@@ -33,20 +33,20 @@ RUN wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VER
 WORKDIR /usr/local/src/Python-${PYTHON_VERSION}
 RUN ./configure --with-ensurepip --enable-optimizations --prefix=/usr/local/python && \
     make && \
-    make install && \
-    rm -rf /usr/local/src/Python-${PYTHON_VERSION}
+    make install
 
 
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 MAINTAINER kotaru23
 
-COPY --from=builder /usr/local/python /usr/local/
+ENV PYTHON_VERSION 3.6.7
 
 # install library
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y \
     git \
+    make \
     build-essential \
     libssl-dev \
     zlib1g-dev \
@@ -62,5 +62,10 @@ RUN apt-get update -y && \
     libffi-dev && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/local/src/Python-${PYTHON_VERSION} /opt/
+WORKDIR /opt/Python-${PYTHON_VERSION}
+
+RUN make install
 
 CMD ['python3']
