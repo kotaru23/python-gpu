@@ -31,7 +31,7 @@ RUN wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VER
     tar xf Python-${PYTHON_VERSION}.tar.xz && \
     rm Python-${PYTHON_VERSION}.tar.xz
 WORKDIR /usr/local/src/Python-${PYTHON_VERSION}
-RUN ./configure --with-ensurepip --enable-optimizations --prefix=/usr/local/python && \
+RUN ./configure --with-ensurepip --prefix=/usr/local/python && \
     make && \
     make install
 
@@ -63,9 +63,11 @@ RUN apt-get update -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/src/Python-${PYTHON_VERSION} /opt/
-WORKDIR /opt/Python-${PYTHON_VERSION}
+COPY --from=builder /usr/local/src/Python-${PYTHON_VERSION} /opt/python
+WORKDIR /opt/python
 
 RUN make install
+
+WORKDIR /workdir
 
 CMD ['python3']
