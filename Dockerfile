@@ -1,5 +1,5 @@
-FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
-MAINTAINER geotaru
+FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04 as builder
+MAINTAINER kotaru23
 
 ENV PYTHON_VERSION 3.6.7
 
@@ -8,7 +8,6 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y \
     git \
-    build-essential \
     make \
     build-essential \
     libssl-dev \
@@ -37,4 +36,31 @@ RUN ./configure --with-ensurepip --enable-optimizations --prefix=/usr/local/pyth
     make install && \
     rm -rf /usr/local/src/Python-${PYTHON_VERSION}
 
-CMD ['/usr/local/python/python']
+
+FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+MAINTAINER kotaru23
+
+COPY --from=builder /usr/local/python /usr/local/bin
+
+# install library
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+    git \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget \
+    curl \
+    llvm \
+    libncurses5-dev \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libffi-dev && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+CMD ['python']
