@@ -71,4 +71,4 @@ WORKDIR /opt/python
 RUN make install && \
     rm -rf /opt/python
 
-CMD ['python3']
+CMD ["python3"]
