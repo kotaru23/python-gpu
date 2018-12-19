@@ -40,7 +40,7 @@ RUN ./configure --with-ensurepip --enable-optimizations --prefix=/usr/local/pyth
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 MAINTAINER kotaru23
 
-COPY --from=builder /usr/local/python /usr/local
+COPY --from=builder /usr/local/python /usr/local/
 
 # install library
 RUN apt-get update -y && \
