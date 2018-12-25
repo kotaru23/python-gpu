@@ -1,6 +1,6 @@
 FROM ubuntu:16.04 as download-python
 
-ENV PYTHON_VERSION 3.6.7
+ENV PYTHON_VERSION 3.6.8
 
 # install library
 RUN apt-get update -y && \
@@ -37,7 +37,7 @@ RUN ./configure --with-ensurepip --enable-optimizations && \
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 MAINTAINER geotaru
 
-ENV PYTHON_VERSION 3.6.7
+ENV PYTHON_VERSION 3.6.8
 ENV DEBIAN_FRONTEND=noninteractive
 
 # install library
